@@ -5,10 +5,14 @@ import os
 import dj_database_url
 from .base import *
 
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
 # Use English since Lao translations not available
 LANGUAGE_CODE = 'en-us'
+
+# Generate a default secret key if not provided (not ideal but works for demo)
+import secrets
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', secrets.token_urlsafe(50))
 
 # Allow Railway domain and custom domains
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.railway.app,localhost').split(',')
@@ -46,6 +50,9 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+# Use database sessions instead of cache sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # Whitenoise for static files
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
