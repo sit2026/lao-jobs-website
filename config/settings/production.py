@@ -15,12 +15,14 @@ import secrets
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', secrets.token_urlsafe(50))
 
 # Allow Railway domain and custom domains
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.railway.app,localhost').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.pythonanywhere.com,.railway.app,.onrender.com,localhost').split(',')
 
 # Railway provides CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
+    'https://*.pythonanywhere.com',
     'https://*.railway.app',
     'https://*.up.railway.app',
+    'https://*.onrender.com',
 ]
 if os.environ.get('SITE_URL'):
     CSRF_TRUSTED_ORIGINS.append(os.environ.get('SITE_URL'))
