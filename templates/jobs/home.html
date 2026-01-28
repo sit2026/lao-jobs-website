@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ SITE_NAME }} - ເວັບຫາວຽກອັນດັບ 1 ຂອງລາວ{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="container hero-content">
+        <h1 class="hero-title">ຊອກຫາວຽກທີ່ໃຊ່ສຳລັບທ່ານ</h1>
+        <p class="hero-subtitle">ຄົ້ນຫາຈາກ {{ total_jobs }} ຕຳແໜ່ງ ຈາກ {{ total_companies }} ບໍລິສັດ</p>
+
+        <!-- Search Box -->
+        <form action="{% url 'jobs:list' %}" method="GET" class="search-box">
+            <input
+                type="text"
+                name="q"
+                class="search-input"
+                placeholder="ຄົ້ນຫາຕຳແໜ່ງ ຫຼື ບໍລິສັດ..."
+            >
+            <button type="submit" class="search-btn">
+                🔍 ຊອກຫາວຽກ
+            </button>
+        </form>
+    </div>
+
+    <div class="hero-wave">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C57.06,118.92,156.63,69.08,321.39,56.44Z" class="shape-fill"></path>
+        </svg>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Quick Filters -->
+    {% if quick_filters %}
+    <section class="py-4">
+        <div class="quick-filters">
+            {% for filter in quick_filters %}
+            <a href="{% url 'jobs:list' %}?{{ filter.filter_params|urlencode }}" class="quick-filter-item">
+                <span class="quick-filter-icon">{{ filter.icon }}</span>
+                <span class="quick-filter-text">{{ filter.name }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Recent Jobs -->
+    <section class="py-8">
+        <div class="section-header">
+            <h2 class="section-title">🆕 ວຽກໃໝ່ລ່າສຸດ</h2>
+            <a href="{% url 'jobs:list' %}" class="section-link">
+                ເບິ່ງທັງໝົດ →
+            </a>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+            {% for job in recent_jobs %}
+            <a href="{% url 'jobs:detail' job.id %}" class="job-card">
+                <div class="job-card-header">
+                    <div class="job-card-logo">
+                        {% if job.company.logo %}
+                        <img src="{{ job.company.logo.url }}" alt="{{ job.company.company_name }}">
+                        {% else %}
+                        🏢
+                        {% endif %}
+                    </div>
+                    <div class="job-card-info">
+                        <h3 class="job-card-title">{{ job.title }}</h3>
+                        <p class="job-card-company">{{ job.company.company_name }}</p>
+                    </div>
+                </div>
+
+                <div class="job-card-tags">
+                    {% if job.province %}
+                    <span class="tag tag-location">📍 {{ job.province.name }}</span>
+                    {% endif %}
+                    <span class="tag tag-salary">💰 {{ job.get_salary_display }}</span>
+                    <span class="tag tag-type">{{ job.get_job_type_display }}</span>
+                </div>
+
+                <div class="job-card-footer">
+                    <span>⏱️ ເຫຼືອ {{ job.days_remaining }} ມື້</span>
+                    <span>👁️ {{ job.view_count }} ຄັ້ງ</span>
+                </div>
+            </a>
+            {% empty %}
+            <div class="empty-state col-span-2">
+                <div class="empty-state-icon">📭</div>
+                <h3 class="empty-state-title">ຍັງບໍ່ມີວຽກ</h3>
+                <p class="empty-state-text">ກະລຸນາກັບມາໃໝ່ພາຍຫຼັງ</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="py-8">
+        <div class="section-header">
+            <h2 class="section-title">📋 ຄົ້ນຫາຕາມໝວດໝູ່</h2>
+            <a href="{% url 'jobs:all_categories' %}" class="section-link">
+                ເບິ່ງທັງໝົດ →
+            </a>
+        </div>
+
+        <div class="categories-grid">
+            {% for category in categories %}
+            <a href="{% url 'jobs:category' category.slug %}" class="category-card">
+                <div class="category-icon">{{ category.icon }}</div>
+                <div class="category-name">{{ category.name }}</div>
+                <div class="category-count">{{ category.job_count }} ຕຳແໜ່ງ</div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Provinces -->
+    <section class="py-8">
+        <div class="section-header">
+            <h2 class="section-title">📍 ຄົ້ນຫາຕາມແຂວງ</h2>
+            <a href="{% url 'jobs:all_provinces' %}" class="section-link">
+                ເບິ່ງທັງໝົດ →
+            </a>
+        </div>
+
+        <div class="grid gap-3 grid-cols-2 md:grid-cols-4">
+            {% for province in provinces %}
+            <a href="{% url 'jobs:province' province.slug %}" class="category-card">
+                <div class="category-name">{{ province.name }}</div>
+                <div class="category-count">{{ province.job_count }} ຕຳແໜ່ງ</div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-8">
+        <div class="cta-section">
+            <h2 class="cta-title">🏢 ສຳລັບນາຍຈ້າງ</h2>
+            <p class="cta-text">ປະກາດວຽກຂອງທ່ານໃຫ້ຄົນລາວຫຼາຍພັນຄົນເຫັນ!</p>
+
+            <div class="cta-features">
+                <div class="cta-feature">
+                    <span>✓</span>
+                    <span>ໂພສວຽກໄດ້ບໍ່ຈຳກັດ</span>
+                </div>
+                <div class="cta-feature">
+                    <span>✓</span>
+                    <span>ລາຄາພຽງ 2,000,000 ກີບ/ປີ</span>
+                </div>
+            </div>
+
+            <a href="{% url 'accounts:register' %}" class="btn btn-success btn-lg" style="max-width: 300px; margin: 0 auto;">
+                ລົງທະບຽນຟຣີ
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

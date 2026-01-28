@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="lo" {% if request.COOKIES.theme %}data-theme="{{ request.COOKIES.theme }}"{% endif %}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+
+    <!-- Meta tags -->
+    <meta name="description" content="{% block meta_description %}ເວັບຫາວຽກອັນດັບ 1 ຂອງລາວ - ຊອກຫາວຽກ, ປະກາດຮັບສະໝັກພະນັກງານ{% endblock %}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% load static %}{% static 'images/favicon.ico' %}" type="image/x-icon">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#3B82F6">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="{% url 'jobs:home' %}" class="logo">
+                {{ SITE_NAME }}
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6">
+                <a href="{% url 'jobs:list' %}" class="text-secondary hover:text-primary">ຊອກຫາວຽກ</a>
+                <a href="{% url 'jobs:all_categories' %}" class="text-secondary hover:text-primary">ໝວດໝູ່</a>
+                <a href="{% url 'jobs:all_provinces' %}" class="text-secondary hover:text-primary">ແຂວງ</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'employer:dashboard' %}" class="btn btn-secondary btn-sm">
+                        ໜ້າຄວບຄຸມ
+                    </a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-ghost btn-sm">
+                        ເຂົ້າສູ່ລະບົບ
+                    </a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm">
+                        ປະກາດວຽກ
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-4">
+        {% for message in messages %}
+        <div class="toast show toast-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">{{ SITE_NAME }}</div>
+                    <p class="footer-description">
+                        ເວັບຫາວຽກອັນດັບ 1 ຂອງລາວ<br>
+                        ຊ່ວຍໃຫ້ຄົນລາວຫາວຽກໄດ້ງ່າຍຂຶ້ນ
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">ສຳລັບຜູ້ຫາວຽກ</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'jobs:list' %}">ຊອກຫາວຽກ</a></li>
+                        <li><a href="{% url 'jobs:all_categories' %}">ໝວດໝູ່ວຽກ</a></li>
+                        <li><a href="{% url 'jobs:all_provinces' %}">ວຽກຕາມແຂວງ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">ສຳລັບນາຍຈ້າງ</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'accounts:register' %}">ລົງທະບຽນ</a></li>
+                        <li><a href="{% url 'billing:choose_plan' %}">ລາຄາແພັກເກດ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">ຕິດຕໍ່</h4>
+                    <ul class="footer-links">
+                        <li>ອີເມວ: info@laojobs.la</li>
+                        <li>ໂທ: 020 xxxx xxxx</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                &copy; {% now "Y" %} {{ SITE_NAME }}. ສະຫງວນລິຂະສິດ.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-items">
+            <a href="{% url 'jobs:home' %}" class="bottom-nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <span class="icon">🏠</span>
+                <span>ໜ້າຫຼັກ</span>
+            </a>
+            <a href="{% url 'jobs:list' %}" class="bottom-nav-item {% if request.resolver_match.url_name == 'list' %}active{% endif %}">
+                <span class="icon">🔍</span>
+                <span>ຊອກຫາ</span>
+            </a>
+            <a href="{% url 'jobs:all_categories' %}" class="bottom-nav-item">
+                <span class="icon">📋</span>
+                <span>ໝວດໝູ່</span>
+            </a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'employer:dashboard' %}" class="bottom-nav-item">
+                <span class="icon">👤</span>
+                <span>ບັນຊີ</span>
+            </a>
+            {% else %}
+            <a href="{% url 'accounts:login' %}" class="bottom-nav-item">
+                <span class="icon">👤</span>
+                <span>ເຂົ້າສູ່ລະບົບ</span>
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

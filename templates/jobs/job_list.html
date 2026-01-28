@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ຊອກຫາວຽກ - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container py-6">
+    <!-- Search & Filter -->
+    <div class="mb-6">
+        <form method="GET" class="space-y-4">
+            <div class="search-box" style="max-width: 100%;">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ form.q.value|default:'' }}"
+                    class="search-input"
+                    placeholder="ຄົ້ນຫາຕຳແໜ່ງ ຫຼື ບໍລິສັດ..."
+                >
+                <button type="submit" class="search-btn">
+                    🔍 ຊອກຫາ
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <select name="category" class="form-input form-select">
+                    <option value="">ທຸກໝວດໝູ່</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if form.category.value == cat.id|stringformat:"s" %}selected{% endif %}>
+                        {{ cat.name }} ({{ cat.job_count }})
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <select name="province" class="form-input form-select">
+                    <option value="">ທຸກແຂວງ</option>
+                    {% for prov in provinces %}
+                    <option value="{{ prov.id }}" {% if form.province.value == prov.id|stringformat:"s" %}selected{% endif %}>
+                        {{ prov.name }} ({{ prov.job_count }})
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <select name="job_type" class="form-input form-select">
+                    <option value="">ທຸກປະເພດ</option>
+                    <option value="full_time" {% if form.job_type.value == 'full_time' %}selected{% endif %}>ເຕັມເວລາ</option>
+                    <option value="part_time" {% if form.job_type.value == 'part_time' %}selected{% endif %}>ບາງເວລາ</option>
+                    <option value="contract" {% if form.job_type.value == 'contract' %}selected{% endif %}>ສັນຍາຈ້າງ</option>
+                    <option value="internship" {% if form.job_type.value == 'internship' %}selected{% endif %}>ຝຶກງານ</option>
+                    <option value="freelance" {% if form.job_type.value == 'freelance' %}selected{% endif %}>ຟຣີແລນ</option>
+                </select>
+
+                <button type="submit" class="btn btn-secondary">
+                    ກອງ
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Count -->
+    <div class="mb-4 text-secondary">
+        ພົບ <strong>{{ total_results }}</strong> ຕຳແໜ່ງ
+    </div>
+
+    <!-- Job List -->
+    <div class="grid gap-4 md:grid-cols-2">
+        {% for job in jobs %}
+        <a href="{% url 'jobs:detail' job.id %}" class="job-card">
+            <div class="job-card-header">
+                <div class="job-card-logo">
+                    {% if job.company.logo %}
+                    <img src="{{ job.company.logo.url }}" alt="{{ job.company.company_name }}">
+                    {% else %}
+                    🏢
+                    {% endif %}
+                </div>
+                <div class="job-card-info">
+                    <h3 class="job-card-title">{{ job.title }}</h3>
+                    <p class="job-card-company">{{ job.company.company_name }}</p>
+                </div>
+            </div>
+
+            <div class="job-card-tags">
+                {% if job.province %}
+                <span class="tag tag-location">📍 {{ job.province.name }}</span>
+                {% endif %}
+                <span class="tag tag-salary">💰 {{ job.get_salary_display }}</span>
+                <span class="tag tag-type">{{ job.get_job_type_display }}</span>
+            </div>
+
+            <div class="job-card-footer">
+                <span>⏱️ ເຫຼືອ {{ job.days_remaining }} ມື້</span>
+                <span>👁️ {{ job.view_count }} ຄັ້ງ</span>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state col-span-2">
+            <div class="empty-state-icon">🔍</div>
+            <h3 class="empty-state-title">ບໍ່ພົບວຽກ</h3>
+            <p class="empty-state-text">ລອງປ່ຽນເງື່ອນໄຂຄົ້ນຫາ</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if jobs.has_other_pages %}
+    <div class="flex justify-center gap-2 mt-8">
+        {% if jobs.has_previous %}
+        <a href="?page={{ jobs.previous_page_number }}&{{ request.GET.urlencode }}" class="btn btn-secondary btn-sm">
+            ← ກ່ອນໜ້າ
+        </a>
+        {% endif %}
+
+        <span class="btn btn-ghost btn-sm">
+            ໜ້າ {{ jobs.number }} / {{ jobs.paginator.num_pages }}
+        </span>
+
+        {% if jobs.has_next %}
+        <a href="?page={{ jobs.next_page_number }}&{{ request.GET.urlencode }}" class="btn btn-secondary btn-sm">
+            ຖັດໄປ →
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

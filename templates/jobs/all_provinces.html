@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}ແຂວງທັງໝົດ - ຫາວຽກລາວ{% endblock %}
+
+{% block content %}
+<div class="container py-8">
+    <h1 class="text-2xl font-bold mb-6">ແຂວງທັງໝົດ</h1>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {% for province in provinces %}
+        <a href="{% url 'jobs:job_list' %}?province={{ province.slug }}"
+           class="category-card">
+            <div class="category-icon">📍</div>
+            <div class="category-name">{{ province.name }}</div>
+            <div class="category-count">{{ province.name_en }}</div>
+        </a>
+        {% empty %}
+        <p class="col-span-full text-center text-gray-500">ບໍ່ມີຂໍ້ມູນ</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

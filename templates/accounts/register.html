@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}ລົງທະບຽນນາຍຈ້າງ - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container py-8">
+    <div class="max-w-md mx-auto">
+        <div class="job-card">
+            <h1 class="text-2xl font-bold text-center mb-2">ລົງທະບຽນນາຍຈ້າງ</h1>
+            <p class="text-center text-secondary mb-6">ເລີ່ມປະກາດວຽກຂອງທ່ານວັນນີ້</p>
+
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div class="toast show toast-error">
+                    ກະລຸນາແກ້ໄຂຂໍ້ຜິດພາດ
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="id_email" class="form-label form-label-required">ອີເມວ</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <p class="form-error">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_company_name" class="form-label form-label-required">ຊື່ບໍລິສັດ</label>
+                    {{ form.company_name }}
+                    {% if form.company_name.errors %}
+                    <p class="form-error">{{ form.company_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_phone_number" class="form-label form-label-required">ເບີໂທຕິດຕໍ່</label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                    <p class="form-error">{{ form.phone_number.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password1" class="form-label form-label-required">ລະຫັດຜ່ານ</label>
+                    {{ form.password1 }}
+                    <p class="form-hint">ຢ່າງໜ້ອຍ 8 ຕົວອັກສອນ</p>
+                    {% if form.password1.errors %}
+                    <p class="form-error">{{ form.password1.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password2" class="form-label form-label-required">ຢືນຢັນລະຫັດຜ່ານ</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                    <p class="form-error">{{ form.password2.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-check">
+                    {{ form.agree_terms }}
+                    <label for="id_agree_terms" class="form-check-label">
+                        ຂ້ອຍຍອมຮັບ <a href="#" class="text-primary">ເງື່ອນໄຂການໃຊ້ງານ</a>
+                    </label>
+                </div>
+                {% if form.agree_terms.errors %}
+                <p class="form-error">{{ form.agree_terms.errors.0 }}</p>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    ລົງທະບຽນ
+                </button>
+            </form>
+
+            <div class="divider"></div>
+
+            <p class="text-center text-secondary">
+                ມີບັນຊີແລ້ວ?
+                <a href="{% url 'accounts:login' %}" class="text-primary font-semibold">
+                    ເຂົ້າສູ່ລະບົບ
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

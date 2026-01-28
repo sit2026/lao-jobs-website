@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}500 - ເກີດຂໍ້ຜິດພາດ{% endblock %}
+
+{% block content %}
+<div class="container py-16">
+    <div class="empty-state">
+        <div class="empty-state-icon">⚠️</div>
+        <h1 class="text-3xl font-bold mb-2">500</h1>
+        <h2 class="empty-state-title">ເກີດຂໍ້ຜິດພາດ</h2>
+        <p class="empty-state-text">ຂໍອະໄພ, ເກີດຂໍ້ຜິດພາດໃນລະບົບ. ກະລຸນາລອງໃໝ່ພາຍຫຼັງ.</p>
+        <a href="{% url 'jobs:home' %}" class="btn btn-primary">
+            ← ກັບໜ້າຫຼັກ
+        </a>
+    </div>
+</div>
+{% endblock %}

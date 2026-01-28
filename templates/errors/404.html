@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}404 - ບໍ່ພົບໜ້າ{% endblock %}
+
+{% block content %}
+<div class="container py-16">
+    <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h1 class="text-3xl font-bold mb-2">404</h1>
+        <h2 class="empty-state-title">ບໍ່ພົບໜ້ານີ້</h2>
+        <p class="empty-state-text">ໜ້າທີ່ທ່ານກຳລັງຊອກຫາບໍ່ມີ ຫຼື ຖືກລົບແລ້ວ</p>
+        <a href="{% url 'jobs:home' %}" class="btn btn-primary">
+            ← ກັບໜ້າຫຼັກ
+        </a>
+    </div>
+</div>
+{% endblock %}

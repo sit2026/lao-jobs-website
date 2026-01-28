@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}ໜ້າຄວບຄຸມ - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container py-6">
+    <h1 class="text-2xl font-bold mb-6">ສະບາຍດີ, {{ company.company_name }}</h1>
+
+    <!-- Subscription Status -->
+    <div class="job-card mb-6">
+        {% if subscription %}
+        <div class="flex items-center justify-between">
+            <div>
+                <span class="tag tag-new">✅ ສະມາຊິກ Active</span>
+                <p class="mt-2 text-secondary">
+                    📅 ໝົດອາຍຸ: {{ subscription.expires_at|date:"d/m/Y" }}
+                    (ເຫຼືອ {{ subscription.days_remaining }} ມື້)
+                </p>
+            </div>
+            <a href="{% url 'billing:subscription' %}" class="btn btn-secondary btn-sm">
+                ຕໍ່ອາຍຸ
+            </a>
+        </div>
+        {% else %}
+        <div class="flex items-center justify-between">
+            <div>
+                <span class="tag tag-urgent">⚠️ ບໍ່ມີສະມາຊິກ</span>
+                <p class="mt-2 text-secondary">
+                    ກະລຸນາສະໝັກສະມາຊິກເພື່ອເລີ່ມປະກາດວຽກ
+                </p>
+            </div>
+            <a href="{% url 'billing:choose_plan' %}" class="btn btn-primary btn-sm">
+                ສະໝັກເດີ
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="job-card text-center">
+            <div class="text-3xl font-bold text-primary">{{ published_count }}</div>
+            <div class="text-sm text-tertiary">ວຽກເຜີຍແຜ່</div>
+        </div>
+        <div class="job-card text-center">
+            <div class="text-3xl font-bold text-secondary">{{ total_views }}</div>
+            <div class="text-sm text-tertiary">ຍອດເບິ່ງ</div>
+        </div>
+        <div class="job-card text-center">
+            <div class="text-3xl font-bold text-yellow-500">{{ expiring_soon }}</div>
+            <div class="text-sm text-tertiary">ໃກ້ໝົດອາຍຸ</div>
+        </div>
+        <div class="job-card text-center">
+            <div class="text-3xl font-bold text-gray-500">{{ draft_count }}</div>
+            <div class="text-sm text-tertiary">ຮ່າງ</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <a href="{% url 'employer:job_create' %}" class="btn btn-primary btn-lg">
+            ➕ ປະກາດວຽກໃໝ່
+        </a>
+        <a href="{% url 'employer:my_jobs' %}" class="btn btn-secondary btn-lg">
+            📋 ເບິ່ງໂພສທັງໝົດ
+        </a>
+    </div>
+
+    <!-- Recent Jobs -->
+    <div class="job-card">
+        <div class="section-header mb-4">
+            <h2 class="section-title">ໂພສລ່າສຸດ</h2>
+            <a href="{% url 'employer:my_jobs' %}" class="section-link">ເບິ່ງທັງໝົດ →</a>
+        </div>
+
+        {% for job in recent_jobs %}
+        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+            <div>
+                <h3 class="font-semibold">{{ job.title }}</h3>
+                <div class="flex items-center gap-2 text-sm text-tertiary">
+                    {% if job.status == 'published' %}
+                    <span class="text-green-600">🟢 ເຜີຍແຜ່</span>
+                    {% elif job.status == 'draft' %}
+                    <span class="text-gray-500">⚪ ຮ່າງ</span>
+                    {% elif job.status == 'expired' %}
+                    <span class="text-red-500">🔴 ໝົດອາຍຸ</span>
+                    {% endif %}
+                    <span>• 👁️ {{ job.view_count }} ຄັ້ງ</span>
+                    {% if job.days_remaining > 0 %}
+                    <span>• ⏱️ {{ job.days_remaining }} ມື້</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'employer:job_edit' job.id %}" class="btn btn-ghost btn-sm">✏️</a>
+                <a href="{% url 'employer:job_duplicate' job.id %}" class="btn btn-ghost btn-sm" onclick="return confirm('ສຳເນົາໂພສນີ້?')">📋</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3 class="empty-state-title">ຍັງບໍ່ມີໂພສ</h3>
+            <p class="empty-state-text">ເລີ່ມປະກາດວຽກຂອງທ່ານເລີຍ!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
