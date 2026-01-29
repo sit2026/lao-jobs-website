@@ -11,7 +11,7 @@
         <a href="{% url 'jobs:job_list' %}?category={{ category.slug }}"
            class="category-card">
             <div class="category-icon">
-                {% if category.icon %}{{ category.icon }}{% else %}📁{% endif %}
+                {% if category.icon %}<i class="fas fa-{{ category.icon }}"></i>{% else %}<i class="fas fa-folder"></i>{% endif %}
             </div>
             <div class="category-name">{{ category.name }}</div>
             <div class="category-count">{{ category.name_en }}</div>
