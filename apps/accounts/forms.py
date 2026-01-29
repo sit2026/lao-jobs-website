@@ -74,7 +74,7 @@ class EmployerRegistrationForm(forms.ModelForm):
         label='ລະຫັດຜ່ານ',
         widget=forms.PasswordInput(attrs={
             'class': 'form-input',
-            'placeholder': 'ຢ່າງໜ້ອຍ 8 ຕົວອັກສອນ',
+            'placeholder': 'ຢ່າງໜ້ອຍ 4 ຕົວອັກສອນ',
         })
     )
     password2 = forms.CharField(
@@ -130,8 +130,8 @@ class EmployerRegistrationForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError('ລະຫັດຜ່ານບໍ່ກົງກັນ')
 
-        if password1 and len(password1) < 8:
-            raise forms.ValidationError('ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 8 ຕົວອັກສອນ')
+        if password1 and len(password1) < 4:
+            raise forms.ValidationError('ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 4 ຕົວອັກສອນ')
 
         return password2
 
@@ -218,8 +218,8 @@ class ChangePasswordForm(forms.Form):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError('ລະຫັດຜ່ານໃໝ່ບໍ່ກົງກັນ')
 
-        if password1 and len(password1) < 8:
-            raise forms.ValidationError('ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 8 ຕົວອັກສອນ')
+        if password1 and len(password1) < 4:
+            raise forms.ValidationError('ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 4 ຕົວອັກສອນ')
 
         return password2
 
