@@ -2,17 +2,17 @@ services:
   - type: web
     name: lao-jobs
     runtime: python
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    buildCommand: "./build.sh"
     startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: config.settings.production
+        value: config.settings.render
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
-        value: 3.12.0
+        value: "3.11.6"
       - key: WEB_CONCURRENCY
-        value: 2
+        value: "2"
 
 databases:
   - name: lao-jobs-db
