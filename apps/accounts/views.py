@@ -118,8 +118,12 @@ def register_view(request):
             # Login the user
             login(request, user)
 
-            messages.success(request, 'ລົງທະບຽນສຳເລັດ! ກະລຸນາຢືນຢັນເບີໂທ')
-            return redirect('accounts:verify_phone')
+            # Mark phone as verified (skip OTP for now - no SMS service)
+            user.is_phone_verified = True
+            user.save(update_fields=['is_phone_verified'])
+
+            messages.success(request, 'ລົງທະບຽນສຳເລັດ!')
+            return redirect('employer:dashboard')
     else:
         form = EmployerRegistrationForm()
 
