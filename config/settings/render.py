@@ -58,6 +58,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
+    'https://lao-jobs-website.onrender.com',
     'https://*.onrender.com',
 ]
 
@@ -72,7 +73,7 @@ X_FRAME_OPTIONS = 'DENY'
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    'https://*.onrender.com',
+    'https://lao-jobs-website.onrender.com',
 ]
 CORS_ALLOW_ALL_ORIGINS = False
 
