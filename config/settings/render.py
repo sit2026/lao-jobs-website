@@ -76,6 +76,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_ALL_ORIGINS = False
 
+# Language - Use English to avoid missing translation files
+LANGUAGE_CODE = 'en-us'
+USE_I18N = False
+
 # Email - Console backend for free tier
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
