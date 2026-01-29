@@ -5,7 +5,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '.trycloudflare.com', '.railway.app', '.onrender.com']
 
 # Use English for local development (Lao translations not available)
 LANGUAGE_CODE = 'en-us'
